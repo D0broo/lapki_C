@@ -1,0 +1,28 @@
+# Visual Studio build artifacts
+x64/
+Debug/
+Release/
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.log
+*.tlog/
+*.recipe
+*.dt.d.json
+*.dt.module.json
+*.dt.module.json.command
+
+# Visual Studio user-specific files
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]uild/
+[Oo]bj/
+[Bb]in/
