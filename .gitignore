@@ -26,3 +26,9 @@ Release/
 [Bb]uild/
 [Oo]bj/
 [Bb]in/
+
+# GCC build artifacts (Makefile)
+*.o
+*.out
+*.gch
+*.d
