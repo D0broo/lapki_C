@@ -28,6 +28,59 @@ static int read_line(char *buffer, size_t size);
 static int read_uint(const char *prompt, unsigned int min, unsigned int max,
                      unsigned int *value);
 
+/* ------------------------------------------------------------ головна -- */
+
+int main(void)
+{
+    unsigned int Size = 0U;
+    unsigned int *A = NULL;
+    float *B = NULL;
+    unsigned int total_int;
+    double total_float;
+    double average_value;
+    unsigned int min_value;
+    float max_value;
+
+    printf("Laboratory work 4, part 1 (Variant 10).\n");
+    if (!read_uint("Enter array size (1..1000000, e.g. 10): ", 1U, 1000000U,
+                   &Size)) {
+        printf("End of input.\n");
+        return 0;
+    }
+
+    A = (unsigned int *)calloc((size_t)Size, sizeof *A);
+    B = (float *)malloc((size_t)Size * sizeof *B);
+    if (A == NULL || B == NULL) {
+        fprintf(stderr, "Error: memory allocation failed.\n");
+        free(A);
+        free(B);
+        return 1;
+    }
+
+    fill_int_array(A, Size);
+    fill_float_array(B, Size);
+
+    print_int_array(A, Size);
+    print_float_array(B, Size);
+
+    total_int = sum(A, Size);
+    total_float = product(B, Size);
+    average_value = mean_value(A, Size);
+    min_value = find_min(A, Size);
+    max_value = find_max(B, Size);
+
+    printf("\nResults:\n");
+    printf("  sum(A)        = %u\n", total_int);
+    printf("  product(B)    = %.6e\n", total_float);
+    printf("  mean_value(A) = %.6f\n", average_value);
+    printf("  find_min(A)   = %u\n", min_value);
+    printf("  find_max(B)   = %.2f\n", (double)max_value);
+
+    free(A);
+    free(B);
+    return 0;
+}
+
 /* ---------------------------------------------------------------- ввід -- */
 
 /* Читає один рядок зі stdin; повертає 0 у разі EOF. Завершальний '\n' видаляється. */
@@ -175,55 +228,4 @@ float find_max(const float *B, unsigned int Size)
         }
     }
     return maximum;
-}
-
-int main(void)
-{
-    unsigned int Size = 0U;
-    unsigned int *A = NULL;
-    float *B = NULL;
-    unsigned int total_int;
-    double total_float;
-    double average_value;
-    unsigned int min_value;
-    float max_value;
-
-    printf("Laboratory work 4, part 1 (Variant 10).\n");
-    if (!read_uint("Enter array size (1..1000000, e.g. 10): ", 1U, 1000000U,
-                   &Size)) {
-        printf("End of input.\n");
-        return 0;
-    }
-
-    A = (unsigned int *)calloc((size_t)Size, sizeof *A);
-    B = (float *)malloc((size_t)Size * sizeof *B);
-    if (A == NULL || B == NULL) {
-        fprintf(stderr, "Error: memory allocation failed.\n");
-        free(A);
-        free(B);
-        return 1;
-    }
-
-    fill_int_array(A, Size);
-    fill_float_array(B, Size);
-
-    print_int_array(A, Size);
-    print_float_array(B, Size);
-
-    total_int = sum(A, Size);
-    total_float = product(B, Size);
-    average_value = mean_value(A, Size);
-    min_value = find_min(A, Size);
-    max_value = find_max(B, Size);
-
-    printf("\nResults:\n");
-    printf("  sum(A)        = %u\n", total_int);
-    printf("  product(B)    = %.6e\n", total_float);
-    printf("  mean_value(A) = %.6f\n", average_value);
-    printf("  find_min(A)   = %u\n", min_value);
-    printf("  find_max(B)   = %.2f\n", (double)max_value);
-
-    free(A);
-    free(B);
-    return 0;
 }

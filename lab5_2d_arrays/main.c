@@ -44,6 +44,150 @@ static void wait_for_enter(void);
 static int setup_matrices(double ***pA, int *pna, double ***pB, int *pnb,
                           int *pmb);
 
+/* ------------------------------------------------------------ головна -- */
+
+int main(void)
+{
+    double **A = NULL;
+    double **B = NULL;
+    int na = 0;
+    int nb = 0;
+    int mb = 0;
+    int rc;
+    int choice;
+
+    srand((unsigned)time(NULL));
+
+    printf("Laboratory work 5 (Variant 10, even).\n");
+    printf("A is na x na; the minimum is searched strictly below the diagonal.\n");
+
+    rc = setup_matrices(&A, &na, &B, &nb, &mb);
+    if (rc == 0) {
+        printf("End of input.\n");
+        clear_memory(A, na);
+        clear_memory(B, nb);
+        return 0;
+    }
+    if (rc < 0) {
+        clear_memory(A, na);
+        clear_memory(B, nb);
+        return 1;
+    }
+
+    printf("\n");
+    print_matrix(A, na, na, "A");
+    printf("\n");
+    print_matrix(B, nb, mb, "B");
+    wait_for_enter();
+
+    for (;;) {
+        printf("\nMenu:\n");
+        printf("  1 - max of the whole A and min strictly below the diagonal\n");
+        printf("  2 - transpose B in memory (mb x nb)\n");
+        printf("  3 - multiply C = A x B\n");
+        printf("  4 - sort a selected row of A\n");
+        printf("  5 - row sums of A and column sums of B\n");
+        printf("  6 - print matrices A and B\n");
+        printf("  7 - re-initialize matrices\n");
+        printf("  0 - exit\n");
+        if (!read_int_line("Choice: ", 0, 7, &choice)) {
+            break;
+        }
+        if (choice == 0) {
+            break;
+        }
+
+        switch (choice) {
+        case 1:
+            max_and_min_below(A, na);
+            wait_for_enter();
+            break;
+        case 2: {
+            double **transposed = transpose_b(B, nb, mb);
+
+            if (transposed != NULL) {
+                int tmp = nb;
+
+                clear_memory(B, nb);
+                B = transposed;
+                nb = mb;
+                mb = tmp;
+                printf("\nB was transposed in memory.\n");
+                print_matrix(B, nb, mb, "B (transposed)");
+            }
+            wait_for_enter();
+            break;
+        }
+        case 3: {
+            double **C = mult_a_b(A, na, B, nb, mb);
+
+            if (C != NULL) {
+                printf("\nC = A x B:\n");
+                print_matrix(C, na, mb, "C");
+                clear_memory(C, na);
+            }
+            wait_for_enter();
+            break;
+        }
+        case 4: {
+            int row;
+
+            printf("\nMatrix A before sorting:\n");
+            print_matrix(A, na, na, "A");
+            if (!read_int_line("Row index (0..na-1): ", 0, na - 1, &row)) {
+                goto done;
+            }
+            sort_row(A[row], na);
+            printf("\nMatrix A after sorting row %d:\n", row);
+            print_matrix(A, na, na, "A");
+            wait_for_enter();
+            break;
+        }
+        case 5:
+            row_and_column_sums(A, na, B, nb, mb);
+            wait_for_enter();
+            break;
+        case 6:
+            printf("\n");
+            print_matrix(A, na, na, "A");
+            printf("\n");
+            print_matrix(B, nb, mb, "B");
+            wait_for_enter();
+            break;
+        case 7: {
+            clear_memory(A, na);
+            A = NULL;
+            clear_memory(B, nb);
+            B = NULL;
+            rc = setup_matrices(&A, &na, &B, &nb, &mb);
+            if (rc == 0) {
+                printf("End of input.\n");
+                goto done;
+            }
+            if (rc < 0) {
+                clear_memory(A, na);
+                clear_memory(B, nb);
+                return 1;
+            }
+            printf("\n");
+            print_matrix(A, na, na, "A");
+            printf("\n");
+            print_matrix(B, nb, mb, "B");
+            wait_for_enter();
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+done:
+    clear_memory(A, na);
+    clear_memory(B, nb);
+    printf("Memory released. Goodbye.\n");
+    return 0;
+}
+
 /* ---------------------------------------------------------------- ввід -- */
 
 static int read_line(char *buffer, size_t size)
@@ -493,148 +637,4 @@ static int setup_matrices(double ***pA, int *pna, double ***pB, int *pnb,
     *pnb = nb;
     *pmb = mb;
     return 1;
-}
-
-/* ------------------------------------------------------------ головна -- */
-
-int main(void)
-{
-    double **A = NULL;
-    double **B = NULL;
-    int na = 0;
-    int nb = 0;
-    int mb = 0;
-    int rc;
-    int choice;
-
-    srand((unsigned)time(NULL));
-
-    printf("Laboratory work 5 (Variant 10, even).\n");
-    printf("A is na x na; the minimum is searched strictly below the diagonal.\n");
-
-    rc = setup_matrices(&A, &na, &B, &nb, &mb);
-    if (rc == 0) {
-        printf("End of input.\n");
-        clear_memory(A, na);
-        clear_memory(B, nb);
-        return 0;
-    }
-    if (rc < 0) {
-        clear_memory(A, na);
-        clear_memory(B, nb);
-        return 1;
-    }
-
-    printf("\n");
-    print_matrix(A, na, na, "A");
-    printf("\n");
-    print_matrix(B, nb, mb, "B");
-    wait_for_enter();
-
-    for (;;) {
-        printf("\nMenu:\n");
-        printf("  1 - max of the whole A and min strictly below the diagonal\n");
-        printf("  2 - transpose B in memory (mb x nb)\n");
-        printf("  3 - multiply C = A x B\n");
-        printf("  4 - sort a selected row of A\n");
-        printf("  5 - row sums of A and column sums of B\n");
-        printf("  6 - print matrices A and B\n");
-        printf("  7 - re-initialize matrices\n");
-        printf("  0 - exit\n");
-        if (!read_int_line("Choice: ", 0, 7, &choice)) {
-            break;
-        }
-        if (choice == 0) {
-            break;
-        }
-
-        switch (choice) {
-        case 1:
-            max_and_min_below(A, na);
-            wait_for_enter();
-            break;
-        case 2: {
-            double **transposed = transpose_b(B, nb, mb);
-
-            if (transposed != NULL) {
-                int tmp = nb;
-
-                clear_memory(B, nb);
-                B = transposed;
-                nb = mb;
-                mb = tmp;
-                printf("\nB was transposed in memory.\n");
-                print_matrix(B, nb, mb, "B (transposed)");
-            }
-            wait_for_enter();
-            break;
-        }
-        case 3: {
-            double **C = mult_a_b(A, na, B, nb, mb);
-
-            if (C != NULL) {
-                printf("\nC = A x B:\n");
-                print_matrix(C, na, mb, "C");
-                clear_memory(C, na);
-            }
-            wait_for_enter();
-            break;
-        }
-        case 4: {
-            int row;
-
-            printf("\nMatrix A before sorting:\n");
-            print_matrix(A, na, na, "A");
-            if (!read_int_line("Row index (0..na-1): ", 0, na - 1, &row)) {
-                goto done;
-            }
-            sort_row(A[row], na);
-            printf("\nMatrix A after sorting row %d:\n", row);
-            print_matrix(A, na, na, "A");
-            wait_for_enter();
-            break;
-        }
-        case 5:
-            row_and_column_sums(A, na, B, nb, mb);
-            wait_for_enter();
-            break;
-        case 6:
-            printf("\n");
-            print_matrix(A, na, na, "A");
-            printf("\n");
-            print_matrix(B, nb, mb, "B");
-            wait_for_enter();
-            break;
-        case 7: {
-            clear_memory(A, na);
-            A = NULL;
-            clear_memory(B, nb);
-            B = NULL;
-            rc = setup_matrices(&A, &na, &B, &nb, &mb);
-            if (rc == 0) {
-                printf("End of input.\n");
-                goto done;
-            }
-            if (rc < 0) {
-                clear_memory(A, na);
-                clear_memory(B, nb);
-                return 1;
-            }
-            printf("\n");
-            print_matrix(A, na, na, "A");
-            printf("\n");
-            print_matrix(B, nb, mb, "B");
-            wait_for_enter();
-            break;
-        }
-        default:
-            break;
-        }
-    }
-
-done:
-    clear_memory(A, na);
-    clear_memory(B, nb);
-    printf("Memory released. Goodbye.\n");
-    return 0;
 }
