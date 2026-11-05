@@ -1,6 +1,6 @@
 /*
- * Initialization of the image matrix Y[N][M] and the shared input helpers.
- * Laboratory work 4: static array filtering, Variant 10.
+ * Ініціалізація матриці зображення Y[N][M] і спільні функції введення.
+ * Лабораторна робота 4: фільтрація статичного масиву, Варіант 10.
  */
 
 #include <errno.h>
@@ -11,15 +11,15 @@
 
 #include "filter.h"
 
-/* Public prototypes (filter_read_*, init_array) are declared in filter.h. */
+/* Публічні прототипи (filter_read_*, init_array) оголошені у filter.h. */
 
-/* ----------------------------------------------------------- prototypes -- */
+/* ----------------------------------------------------------- прототипи -- */
 
-/* Internal initialization helpers. */
+/* Внутрішні допоміжні функції ініціалізації. */
 static void init_random(int Y[N][M]);
 static void init_keyboard(int Y[N][M]);
 
-/* ------------------------------------------------------------------ code -- */
+/* ------------------------------------------------------------------ код -- */
 
 int filter_read_line(char *buffer, int size)
 {

@@ -1,8 +1,8 @@
 /*
- * Laboratory work 4, part 1: one-dimensional dynamic arrays.
- * Variant 10.
+ * Лабораторна робота 4, частина 1: одномірні динамічні масиви.
+ * Варіант 10.
  *
- * Build: gcc -std=c11 -Wall -Wextra -Werror -pedantic -o lab4_1.exe main.c
+ * Збірка: gcc -std=c11 -Wall -Wextra -Werror -pedantic -o lab4_1.exe main.c
  */
 
 #include <errno.h>
@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ----------------------------------------------------------- prototypes -- */
+/* ----------------------------------------------------------- прототипи -- */
 
-/* Required public interface (definitions are below). */
+/* Публічний інтерфейс, який вимагає завдання (реалізації — нижче). */
 void fill_int_array(unsigned int *A, unsigned int Size);
 void fill_float_array(float *B, unsigned int Size);
 void print_int_array(const unsigned int *uiptr, unsigned int size_of_array);
@@ -23,14 +23,14 @@ double mean_value(const unsigned int *A, unsigned int Size);
 unsigned int find_min(const unsigned int *A, unsigned int Size);
 float find_max(const float *B, unsigned int Size);
 
-/* Internal input helpers. */
+/* Внутрішні допоміжні функції введення. */
 static int read_line(char *buffer, size_t size);
 static int read_uint(const char *prompt, unsigned int min, unsigned int max,
                      unsigned int *value);
 
-/* ---------------------------------------------------------------- input -- */
+/* ---------------------------------------------------------------- ввід -- */
 
-/* Read one line from stdin; return 0 on EOF. A trailing newline is removed. */
+/* Читає один рядок зі stdin; повертає 0 у разі EOF. Завершальний '\n' видаляється. */
 static int read_line(char *buffer, size_t size)
 {
     size_t length;
@@ -43,14 +43,14 @@ static int read_line(char *buffer, size_t size)
     if (length > 0U && buffer[length - 1U] == '\n') {
         buffer[length - 1U] = '\0';
     } else {
-        /* The line was longer than the buffer: discard the remainder. */
+        /* Рядок довший за буфер: відкидаємо залишок. */
         while ((ch = getchar()) != '\n' && ch != EOF) {
         }
     }
     return 1;
 }
 
-/* Read an unsigned integer in [min; max]; return 0 on EOF. */
+/* Читає беззнакове ціле з діапазону [min; max]; повертає 0 у разі EOF. */
 static int read_uint(const char *prompt, unsigned int min, unsigned int max,
                      unsigned int *value)
 {
@@ -84,7 +84,7 @@ static int read_uint(const char *prompt, unsigned int min, unsigned int max,
     }
 }
 
-/* A[j] = Size - (j + 1) */
+/* Формула: A[j] = Size - (j + 1) */
 void fill_int_array(unsigned int *A, unsigned int Size)
 {
     unsigned int j;
@@ -94,7 +94,7 @@ void fill_int_array(unsigned int *A, unsigned int Size)
     }
 }
 
-/* B[j] = 5 * j + 5 */
+/* Формула: B[j] = 5 * j + 5 */
 void fill_float_array(float *B, unsigned int Size)
 {
     unsigned int j;

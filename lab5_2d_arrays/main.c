@@ -1,9 +1,9 @@
 /*
- * Laboratory work 5: two-dimensional dynamic real matrices (double **).
- * Variant 10 (even): the minimum of A is searched STRICTLY BELOW the main
- * diagonal (i > j); the maximum is searched over the whole matrix.
+ * Лабораторна робота 5: двовимірні динамічні матриці дійсних чисел (double **).
+ * Варіант 10 (парний): мінімум A шукається СТРОГО ПІД головною діагоналлю
+ * (i > j); максимум шукається по всій матриці.
  *
- * Build: gcc -std=c11 -Wall -Wextra -Werror -pedantic -o lab5.exe main.c
+ * Збірка: gcc -std=c11 -Wall -Wextra -Werror -pedantic -o lab5.exe main.c
  */
 
 #include <errno.h>
@@ -15,21 +15,21 @@
 #define DIM_MIN (1)
 #define DIM_MAX (20)
 
-/* ----------------------------------------------------------- prototypes -- */
+/* ----------------------------------------------------------- прототипи -- */
 
-/* Required public interface (definitions are below). */
+/* Публічний інтерфейс, який вимагає завдання (реалізації — нижче). */
 void clear_memory(double **matrix, int rows);
 double **memory_allocation(int rows, int cols);
 void sort_row(double *row, int size);
 
-/* Internal input helpers. */
+/* Внутрішні допоміжні функції введення. */
 static int read_line(char *buffer, size_t size);
 static int read_int_line(const char *prompt, int min, int max, int *out);
 static int read_int_default(const char *prompt, int def, int min, int max,
                             int *out);
 static int read_double_values(const char *prompt, double *values, int count);
 
-/* Internal matrix helpers. */
+/* Внутрішні допоміжні функції для роботи з матрицями. */
 static void print_matrix(double **matrix, int rows, int cols, const char *name);
 static int fill_keyboard(double **matrix, int rows, int cols,
                          const char *name);
@@ -44,7 +44,7 @@ static void wait_for_enter(void);
 static int setup_matrices(double ***pA, int *pna, double ***pB, int *pnb,
                           int *pmb);
 
-/* ---------------------------------------------------------------- input -- */
+/* ---------------------------------------------------------------- ввід -- */
 
 static int read_line(char *buffer, size_t size)
 {
@@ -174,7 +174,7 @@ static int read_double_values(const char *prompt, double *values, int count)
     }
 }
 
-/* --------------------------------------------------------------- memory -- */
+/* -------------------------------------------------------------- пам'ять -- */
 
 void clear_memory(double **matrix, int rows)
 {
@@ -211,7 +211,7 @@ double **memory_allocation(int rows, int cols)
     return matrix;
 }
 
-/* ----------------------------------------------------------- printing ---- */
+/* --------------------------------------------------------------- друк ---- */
 
 static void print_matrix(double **matrix, int rows, int cols, const char *name)
 {
@@ -227,7 +227,7 @@ static void print_matrix(double **matrix, int rows, int cols, const char *name)
     }
 }
 
-/* ------------------------------------------------------- initialization -- */
+/* ------------------------------------------------------- ініціалізація -- */
 
 static int fill_keyboard(double **matrix, int rows, int cols,
                          const char *name)
@@ -271,7 +271,7 @@ static void fill_random(double **matrix, int rows, int cols)
     }
 }
 
-/* 1 = ready, 0 = end of input, -1 = allocation failure */
+/* 1 — готово, 0 — кінець введення, -1 — помилка виділення пам'яті */
 static int init_matrix(double ***target, int rows, int cols, const char *name)
 {
     int mode;
@@ -308,9 +308,9 @@ static int init_matrix(double ***target, int rows, int cols, const char *name)
     return 1;
 }
 
-/* ------------------------------------------------------------ the tasks -- */
+/* ------------------------------------------------------------- завдання -- */
 
-/* Maximum over the whole matrix A and minimum strictly below the diagonal. */
+/* Максимум по всій матриці A та мінімум строго під головною діагоналлю. */
 static void max_and_min_below(double **A, int na)
 {
     double max_value = A[0][0];
@@ -403,7 +403,7 @@ static double **mult_a_b(double **A, int na, double **B, int nb, int mb)
     return C;
 }
 
-/* Mandatory signature: sorts one row (a 1D array of `size` doubles). */
+/* Обов'язкова сигнатура: сортує один рядок (одномірний масив із size дійсних чисел). */
 void sort_row(double *row, int size)
 {
     int i;
@@ -454,9 +454,9 @@ static void wait_for_enter(void)
     (void)read_line(line, sizeof line);
 }
 
-/* ---------------------------------------------------------------- setup -- */
+/* ------------------------------------------------------------ підготовка -- */
 
-/* 1 = ready, 0 = end of input, -1 = allocation failure */
+/* 1 — готово, 0 — кінець введення, -1 — помилка виділення пам'яті */
 static int setup_matrices(double ***pA, int *pna, double ***pB, int *pnb,
                           int *pmb)
 {
@@ -495,7 +495,7 @@ static int setup_matrices(double ***pA, int *pna, double ***pB, int *pnb,
     return 1;
 }
 
-/* ----------------------------------------------------------------- main -- */
+/* ------------------------------------------------------------ головна -- */
 
 int main(void)
 {

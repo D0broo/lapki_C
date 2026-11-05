@@ -1,7 +1,7 @@
 /*
- * Printing of a 2D array with an arbitrary number of rows and columns.
- * The array is passed as a flat pointer (row-major), so the same function
- * prints both Y[N][M] and the mask A[K][L].
+ * Друк двовимірного масиву з довільною кількістю рядків і стовпців.
+ * Масив передається плоским покажчиком (рядковий порядок), тому одна
+ * функція друкує і Y[N][M], і маску A[K][L].
  */
 
 #include <stdio.h>

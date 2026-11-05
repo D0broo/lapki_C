@@ -1,14 +1,14 @@
 #ifndef FILTER_H
 #define FILTER_H
 
-/* Laboratory work 4: filtering of a static 2D array. Variant 10. */
+/* Лабораторна робота 4: фільтрація статичного двовимірного масиву. Варіант 10. */
 
-#define N 10 /* rows of the image matrix Y / X */
-#define M 10 /* columns of the image matrix Y / X */
-#define K 3  /* rows of the filter mask A (odd, < N) */
-#define L 3  /* columns of the filter mask A (odd, < M) */
+#define N 10 /* рядки зображення Y / X */
+#define M 10 /* стовпці зображення Y / X */
+#define K 3  /* рядки маски фільтра A (непарне, < N) */
+#define L 3  /* стовпці маски фільтра A (непарне, < M) */
 
-/* --- input helpers (implemented in init_array.c) --- */
+/* --- функції введення (реалізовані в init_array.c) --- */
 int filter_read_line(char *buffer, int size);
 int filter_read_int(const char *prompt, int min, int max, int *out);
 int filter_read_double(const char *prompt, double min, double max,
@@ -16,7 +16,7 @@ int filter_read_double(const char *prompt, double min, double max,
 int filter_read_values(const char *prompt, int *values, int count, int min,
                        int max);
 
-/* --- elementary tasks, one per source file --- */
+/* --- елементарні завдання, по одному на файл --- */
 void init_array(int Y[N][M]);
 void print_array(const int *data, int rows, int cols, const char *title);
 void init_filter(int A[K][L]);

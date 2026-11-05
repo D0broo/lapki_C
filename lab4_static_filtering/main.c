@@ -1,10 +1,10 @@
 /*
- * Laboratory work 4: static 2D array filtering (multi-file project).
- * Variant 10: N = M = 10, mask K = L = 3.
+ * Лабораторна робота 4: фільтрація статичного двовимірного масиву
+ * (багатофайловий проєкт). Варіант 10: N = M = 10, маска K = L = 3.
  *
- * Workflow: initialize Y, initialize the mask A, then apply the weighted
- * filter, impulse noise and the 3x3 median filter, printing the arrays at
- * every step.
+ * Порядок роботи: ініціалізувати Y, ініціалізувати маску A, застосувати
+ * зважений фільтр, імпульсний шум і медіанний фільтр 3x3, друкуючи масиви
+ * на кожному кроці.
  */
 
 #include <stdio.h>

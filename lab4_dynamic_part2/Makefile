@@ -1,6 +1,6 @@
-# Makefile for Laboratory work 4, part 2 (2D dynamic integer matrices, Variant 10).
-# Requires GCC. On Windows (MSYS2 UCRT64) run: mingw32-make
-# On Linux/macOS: make
+# Makefile для лабораторної роботи 4, частина 2 (2D динамічні матриці int, Варіант 10).
+# Потрібен GCC. На Windows (MSYS2 UCRT64): mingw32-make
+# На Linux/macOS: make
 
 CC     = gcc
 CFLAGS = -std=c11 -Wall -Wextra -Werror -pedantic -O2

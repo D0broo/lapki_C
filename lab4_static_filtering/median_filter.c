@@ -1,8 +1,8 @@
 /*
- * 3x3 median filtering of Y[N][M] in place.
- * A full copy of Y is taken first, so every output cell is computed from
- * the pre-filtered (noisy) values. At borders and corners only valid
- * in-bound neighbours are collected; their median is used.
+ * Медіанна фільтрація 3x3 масиву Y[N][M] на місці.
+ * Спочатку робиться повна копія Y, тому кожна вихідна клітинка
+ * обчислюється з попередніх (зашумлених) значень. На межах і в кутах
+ * збираються лише дійсні сусіди в межах масиву; береться їхня медіана.
  */
 
 #include "filter.h"

@@ -1,6 +1,6 @@
-# Makefile for the labs of D0broo/lapki_C (Variant 10).
-# Requires GCC. On Windows (MSYS2 UCRT64) run with:  mingw32-make lab4_1
-# On Linux/macOS:                                    make lab4_1
+# Makefile для лабораторних D0broo/lapki_C (Варіант 10).
+# Потрібен GCC. На Windows (MSYS2 UCRT64): mingw32-make lab4_1
+# На Linux/macOS:                         make lab4_1
 
 CC       = gcc
 CFLAGS   = -std=c99 -Wall -Wextra -O2

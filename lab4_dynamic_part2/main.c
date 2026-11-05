@@ -1,8 +1,8 @@
 /*
- * Laboratory work 4, part 2: two-dimensional dynamic integer matrices.
- * Variant 10 (even): max/min are searched STRICTLY BELOW the main diagonal.
+ * Лабораторна робота 4, частина 2: двовимірні динамічні матриці цілих чисел.
+ * Варіант 10 (парний): max/min шукаються СТРОГО ПІД головною діагоналлю.
  *
- * Build: gcc -std=c11 -Wall -Wextra -Werror -pedantic -o lab4_2.exe main.c
+ * Збірка: gcc -std=c11 -Wall -Wextra -Werror -pedantic -o lab4_2.exe main.c
  */
 
 #include <errno.h>
@@ -16,16 +16,16 @@
 #define DIM_MIN     (1)
 #define DIM_MAX     (20)
 
-/* ----------------------------------------------------------- prototypes -- */
+/* ----------------------------------------------------------- прототипи -- */
 
-/* Required public interface (definitions are below). */
+/* Публічний інтерфейс, який вимагає завдання (реалізації — нижче). */
 void clear_memory(int **matrix, int rows);
 int **memory_allocation(int rows, int cols);
 void max_min(int **A, int n_a, int *max_a, int *min_a);
 int **transpose_b(int **B, int n_b, int m_b);
 int **mult_a_b(int **B, int n_b, int m_b, int **A, int n_a);
 
-/* Internal input helpers. */
+/* Внутрішні допоміжні функції введення. */
 static int read_line(char *buffer, size_t size);
 static int read_int_line(const char *prompt, int min, int max, int *out);
 static int read_int_default(const char *prompt, int def, int min, int max,
@@ -33,7 +33,7 @@ static int read_int_default(const char *prompt, int def, int min, int max,
 static int read_int_values(const char *prompt, int *values, int count,
                            int min, int max);
 
-/* Internal matrix helpers. */
+/* Внутрішні допоміжні функції для роботи з матрицями. */
 static void print_matrix(int **matrix, int rows, int cols, const char *name);
 static int fill_keyboard(int **matrix, int rows, int cols, const char *name);
 static void fill_random(int **matrix, int rows, int cols);
@@ -46,9 +46,9 @@ static void row_and_column_sums(int **A, int n_a, int **B, int n_b, int m_b);
 static int setup_matrices(int ***pA, int *pn_a, int ***pB, int *pn_b,
                           int *pm_b);
 
-/* ---------------------------------------------------------------- input -- */
+/* ---------------------------------------------------------------- ввід -- */
 
-/* Read one line from stdin; return 0 on EOF. A trailing newline is removed. */
+/* Читає один рядок зі stdin; повертає 0 у разі EOF. Завершальний '\n' видаляється. */
 static int read_line(char *buffer, size_t size)
 {
     size_t length;
@@ -67,7 +67,7 @@ static int read_line(char *buffer, size_t size)
     return 1;
 }
 
-/* Read an integer in [min; max]; return 0 on EOF. */
+/* Читає ціле число з діапазону [min; max]; повертає 0 у разі EOF. */
 static int read_int_line(const char *prompt, int min, int max, int *out)
 {
     char line[128];
@@ -100,7 +100,7 @@ static int read_int_line(const char *prompt, int min, int max, int *out)
     }
 }
 
-/* Read an integer, using `def` when the line is empty; return 0 on EOF. */
+/* Читає ціле число; порожній рядок означає значення def. Повертає 0 у разі EOF. */
 static int read_int_default(const char *prompt, int def, int min, int max,
                             int *out)
 {
@@ -134,7 +134,7 @@ static int read_int_default(const char *prompt, int def, int min, int max,
     }
 }
 
-/* Read exactly `count` integers from one line; return 0 on EOF. */
+/* Читає рівно count цілих чисел з одного рядка; повертає 0 у разі EOF. */
 static int read_int_values(const char *prompt, int *values, int count,
                            int min, int max)
 {
@@ -181,7 +181,7 @@ static int read_int_values(const char *prompt, int *values, int count,
     }
 }
 
-/* --------------------------------------------------------------- memory -- */
+/* -------------------------------------------------------------- пам'ять -- */
 
 void clear_memory(int **matrix, int rows)
 {
@@ -218,7 +218,7 @@ int **memory_allocation(int rows, int cols)
     return matrix;
 }
 
-/* ----------------------------------------------------------- printing ---- */
+/* --------------------------------------------------------------- друк ---- */
 
 static void print_matrix(int **matrix, int rows, int cols, const char *name)
 {
@@ -234,7 +234,7 @@ static void print_matrix(int **matrix, int rows, int cols, const char *name)
     }
 }
 
-/* ------------------------------------------------------- initialization -- */
+/* ------------------------------------------------------- ініціалізація -- */
 
 static int fill_keyboard(int **matrix, int rows, int cols, const char *name)
 {
@@ -265,7 +265,7 @@ static void fill_random(int **matrix, int rows, int cols)
     }
 }
 
-/* kind 0: A[i][j] = 10*i - j; kind 1: B[i][j] = i + j */
+/* варіант 0: A[i][j] = 10*i - j; варіант 1: B[i][j] = i + j */
 static void fill_formula(int **matrix, int rows, int cols, int kind)
 {
     int i;
@@ -278,7 +278,7 @@ static void fill_formula(int **matrix, int rows, int cols, int kind)
     }
 }
 
-/* 1 = matrix ready, 0 = end of input, -1 = allocation failure */
+/* 1 — матрицю готово, 0 — кінець введення, -1 — помилка виділення пам'яті */
 static int init_matrix(int ***target, int rows, int cols, const char *name)
 {
     int mode;
@@ -314,11 +314,11 @@ static int init_matrix(int ***target, int rows, int cols, const char *name)
     return 1;
 }
 
-/* ------------------------------------------------------------ the tasks -- */
+/* ------------------------------------------------------------- завдання -- */
 
 /*
- * Variant 10 is even: search ONLY below the main diagonal (i > j).
- * Initialised from A[1][0] and iterating i = 1..n_a-1, j = 0..i-1.
+ * Варіант 10 — парний: шукаємо ЛИШЕ під головною діагоналлю (i > j).
+ * Початкове значення — A[1][0], далі i = 1..n_a-1, j = 0..i-1.
  */
 void max_min(int **A, int n_a, int *max_a, int *min_a)
 {
@@ -350,7 +350,7 @@ void max_min(int **A, int n_a, int *max_a, int *min_a)
     printf("  min = %d at A[%d][%d]\n", *min_a, min_i, min_j);
 }
 
-/* Allocate and return an (m_b x n_b) transpose of B, or NULL on failure. */
+/* Виділяє та повертає транспоновану B розміру m_b x n_b або NULL у разі помилки. */
 int **transpose_b(int **B, int n_b, int m_b)
 {
     int **transposed;
@@ -370,7 +370,7 @@ int **transpose_b(int **B, int n_b, int m_b)
     return transposed;
 }
 
-/* Allocate and return C = A x B (n_a x m_b), or NULL if incompatible. */
+/* Виділяє та повертає C = A x B (n_a x m_b) або NULL, якщо розміри несумісні. */
 int **mult_a_b(int **B, int n_b, int m_b, int **A, int n_a)
 {
     int **C;
@@ -502,9 +502,9 @@ static void row_and_column_sums(int **A, int n_a, int **B, int n_b, int m_b)
     }
 }
 
-/* ---------------------------------------------------------------- setup -- */
+/* ------------------------------------------------------------ підготовка -- */
 
-/* 1 = ready, 0 = end of input, -1 = allocation failure */
+/* 1 — готово, 0 — кінець введення, -1 — помилка виділення пам'яті */
 static int setup_matrices(int ***pA, int *pn_a, int ***pB, int *pn_b,
                           int *pm_b)
 {
@@ -543,7 +543,7 @@ static int setup_matrices(int ***pA, int *pn_a, int ***pB, int *pn_b,
     return 1;
 }
 
-/* ----------------------------------------------------------------- main -- */
+/* ------------------------------------------------------------ головна -- */
 
 int main(void)
 {

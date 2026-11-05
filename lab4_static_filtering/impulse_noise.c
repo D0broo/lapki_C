@@ -1,8 +1,8 @@
 /*
- * Impulse noise on Y[N][M].
- * count = (int)((N * M * percent) / 100.0 + 0.5) cells are corrupted;
- * each cell is corrupted at most once (tracked with a boolean mask).
- * Mode 1 -> 0, mode 2 -> 255, mode 3 -> random 0..255.
+ * Імпульсний шум на Y[N][M].
+ * Пошкоджується count = (int)((N * M * percent) / 100.0 + 0.5) клітинок;
+ * кожна клітинка — не більше одного разу (контроль через логічну маску).
+ * Режим 1 -> 0, режим 2 -> 255, режим 3 -> випадкове 0..255.
  */
 
 #include <stdio.h>

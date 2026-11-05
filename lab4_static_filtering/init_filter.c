@@ -1,6 +1,6 @@
 /*
- * Initialization of the filter mask A[K][L].
- * Laboratory work 4: static array filtering, Variant 10.
+ * Ініціалізація маски фільтра A[K][L].
+ * Лабораторна робота 4: фільтрація статичного масиву, Варіант 10.
  */
 
 #include <stdio.h>
@@ -8,16 +8,16 @@
 
 #include "filter.h"
 
-/* Public prototype (init_filter) is declared in filter.h. */
+/* Публічний прототип (init_filter) оголошений у filter.h. */
 
-/* ----------------------------------------------------------- prototypes -- */
+/* ----------------------------------------------------------- прототипи -- */
 
-/* Internal initialization helpers. */
+/* Внутрішні допоміжні функції ініціалізації. */
 static void filter_random(int A[K][L]);
 static void filter_ones(int A[K][L]);
 static void filter_keyboard(int A[K][L]);
 
-/* ------------------------------------------------------------------ code -- */
+/* ------------------------------------------------------------------ код -- */
 
 static void filter_random(int A[K][L])
 {

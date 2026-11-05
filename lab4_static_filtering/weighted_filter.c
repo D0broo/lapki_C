@@ -1,8 +1,8 @@
 /*
- * Weighted filtering of Y[N][M] with the mask A[K][L] into X[N][M].
- * Y is left unchanged. Only valid in-bound neighbours and their active
- * mask weights are used at the edges and corners; the result is clamped
- * to 0..255.
+ * Зважена фільтрація Y[N][M] маскою A[K][L] у X[N][M].
+ * Y не змінюється. На краях і в кутах враховуються лише дійсні сусіди
+ * в межах масиву та відповідні активні ваги маски; результат
+ * обмежується діапазоном 0..255.
  */
 
 #include <stdio.h>

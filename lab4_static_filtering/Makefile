@@ -1,6 +1,6 @@
-# Makefile for Laboratory work 4: static 2D array filtering (multi-file).
-# Requires GCC. On Windows (MSYS2 UCRT64) run: mingw32-make
-# On Linux/macOS: make
+# Makefile для лабораторної роботи 4: фільтрація статичного 2D масиву (багатофайловий).
+# Потрібен GCC. На Windows (MSYS2 UCRT64): mingw32-make
+# На Linux/macOS: make
 
 CC     = gcc
 CFLAGS = -std=c11 -Wall -Wextra -Werror -pedantic -O2
