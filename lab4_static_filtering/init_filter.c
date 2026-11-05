@@ -8,6 +8,17 @@
 
 #include "filter.h"
 
+/* Public prototype (init_filter) is declared in filter.h. */
+
+/* ----------------------------------------------------------- prototypes -- */
+
+/* Internal initialization helpers. */
+static void filter_random(int A[K][L]);
+static void filter_ones(int A[K][L]);
+static void filter_keyboard(int A[K][L]);
+
+/* ------------------------------------------------------------------ code -- */
+
 static void filter_random(int A[K][L])
 {
     int c;

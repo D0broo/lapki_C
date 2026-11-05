@@ -10,6 +10,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* ----------------------------------------------------------- prototypes -- */
+
+/* Required public interface (definitions are below). */
+void fill_int_array(unsigned int *A, unsigned int Size);
+void fill_float_array(float *B, unsigned int Size);
+void print_int_array(const unsigned int *uiptr, unsigned int size_of_array);
+void print_float_array(const float *fptr, unsigned int size_of_array);
+unsigned int sum(const unsigned int *uiptr, unsigned int size_of_array);
+double product(const float *fptr, unsigned int size_of_array);
+double mean_value(const unsigned int *A, unsigned int Size);
+unsigned int find_min(const unsigned int *A, unsigned int Size);
+float find_max(const float *B, unsigned int Size);
+
+/* Internal input helpers. */
+static int read_line(char *buffer, size_t size);
+static int read_uint(const char *prompt, unsigned int min, unsigned int max,
+                     unsigned int *value);
+
+/* ---------------------------------------------------------------- input -- */
+
 /* Read one line from stdin; return 0 on EOF. A trailing newline is removed. */
 static int read_line(char *buffer, size_t size)
 {

@@ -16,6 +16,36 @@
 #define DIM_MIN     (1)
 #define DIM_MAX     (20)
 
+/* ----------------------------------------------------------- prototypes -- */
+
+/* Required public interface (definitions are below). */
+void clear_memory(int **matrix, int rows);
+int **memory_allocation(int rows, int cols);
+void max_min(int **A, int n_a, int *max_a, int *min_a);
+int **transpose_b(int **B, int n_b, int m_b);
+int **mult_a_b(int **B, int n_b, int m_b, int **A, int n_a);
+
+/* Internal input helpers. */
+static int read_line(char *buffer, size_t size);
+static int read_int_line(const char *prompt, int min, int max, int *out);
+static int read_int_default(const char *prompt, int def, int min, int max,
+                            int *out);
+static int read_int_values(const char *prompt, int *values, int count,
+                           int min, int max);
+
+/* Internal matrix helpers. */
+static void print_matrix(int **matrix, int rows, int cols, const char *name);
+static int fill_keyboard(int **matrix, int rows, int cols, const char *name);
+static void fill_random(int **matrix, int rows, int cols);
+static void fill_formula(int **matrix, int rows, int cols, int kind);
+static int init_matrix(int ***target, int rows, int cols, const char *name);
+static void sort_row(int *row, int size);
+static void sort_all(int **A, int n_a);
+static void sort_menu(int **A, int n_a);
+static void row_and_column_sums(int **A, int n_a, int **B, int n_b, int m_b);
+static int setup_matrices(int ***pA, int *pn_a, int ***pB, int *pn_b,
+                          int *pm_b);
+
 /* ---------------------------------------------------------------- input -- */
 
 /* Read one line from stdin; return 0 on EOF. A trailing newline is removed. */

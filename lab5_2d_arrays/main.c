@@ -15,6 +15,35 @@
 #define DIM_MIN (1)
 #define DIM_MAX (20)
 
+/* ----------------------------------------------------------- prototypes -- */
+
+/* Required public interface (definitions are below). */
+void clear_memory(double **matrix, int rows);
+double **memory_allocation(int rows, int cols);
+void sort_row(double *row, int size);
+
+/* Internal input helpers. */
+static int read_line(char *buffer, size_t size);
+static int read_int_line(const char *prompt, int min, int max, int *out);
+static int read_int_default(const char *prompt, int def, int min, int max,
+                            int *out);
+static int read_double_values(const char *prompt, double *values, int count);
+
+/* Internal matrix helpers. */
+static void print_matrix(double **matrix, int rows, int cols, const char *name);
+static int fill_keyboard(double **matrix, int rows, int cols,
+                         const char *name);
+static void fill_formula(double **matrix, int rows, int cols, int kind);
+static void fill_random(double **matrix, int rows, int cols);
+static int init_matrix(double ***target, int rows, int cols, const char *name);
+static void max_and_min_below(double **A, int na);
+static double **transpose_b(double **B, int nb, int mb);
+static double **mult_a_b(double **A, int na, double **B, int nb, int mb);
+static void row_and_column_sums(double **A, int na, double **B, int nb, int mb);
+static void wait_for_enter(void);
+static int setup_matrices(double ***pA, int *pna, double ***pB, int *pnb,
+                          int *pmb);
+
 /* ---------------------------------------------------------------- input -- */
 
 static int read_line(char *buffer, size_t size)

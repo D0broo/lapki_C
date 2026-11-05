@@ -11,6 +11,16 @@
 
 #include "filter.h"
 
+/* Public prototypes (filter_read_*, init_array) are declared in filter.h. */
+
+/* ----------------------------------------------------------- prototypes -- */
+
+/* Internal initialization helpers. */
+static void init_random(int Y[N][M]);
+static void init_keyboard(int Y[N][M]);
+
+/* ------------------------------------------------------------------ code -- */
+
 int filter_read_line(char *buffer, int size)
 {
     size_t length;
