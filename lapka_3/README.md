@@ -1,28 +1,28 @@
-# Лабораторна робота 3 — Solving a Nonlinear Equation f(x) = 0 (Variant 10)
+# Лабораторна робота 3 — розв'язання нелінійного рівняння f(x) = 0 (Варіант 10)
 
-**Task (Variant 10):** find the root of the nonlinear equation $f(x) = 0$ by the **chord (regula falsi)** method and the **bisection (half-division)** method, starting from an interval $[x_1, x_2]$ that is validated for a sign change and monotonicity, with a per-batch user control menu, debug tracing and `clock()` timing.
+**Завдання (Варіант 10):** знайти корінь нелінійного рівняння $f(x) = 0$ методом **хорд (regula falsi)** та методом **половинного ділення (бісекції)**, починаючи з відрізка $[x_1, x_2]$, перевіреного на зміну знака та монотонність, з порційним меню керування, відлагоджувальним трасуванням і вимірюванням часу через `clock()`.
 
-The function is taken from Lab work 1 (Variant 10):
+Функцію взято з лабораторної роботи 1 (Варіант 10):
 
 $$f(x) = 0.25\,(x-25)^2 + \frac{(x+25)^3}{100} - 1, \qquad f'(x) = 0.5\,(x-25) + \frac{3\,(x+25)^2}{100}$$
 
-Source: [`lapka_3/main.c`](main.c). All numbers below are **real program output** (compiled with `gcc -std=c99 -Wall -Wextra -O2`, zero warnings), cross-checked against an independent high-precision bisection (true root: **X = −96.8676105235** with f(X) = 9·10⁻¹³).
+Джерело: [`lapka_3/main.c`](main.c). Усі наведені нижче числа — **реальний вивід програми** (зібрано `gcc -std=c99 -Wall -Wextra -O2`, без попереджень) і перехресно перевірено незалежною бісекцією високої точності (справжній корінь: **X = −96.8676105235**, f(X) = 9·10⁻¹³).
 
-## 1. Mathematical background
+## 1. Математичне підґрунтя
 
-**Conditions for a unique root on [x₁; x₂]:** ① $f(x_1)\cdot f(x_2) < 0$ (sign change) and ② f is strictly monotone on the interval ($f'(x)$ keeps a constant sign). For this f, $f'(x) = 0$ at $x \approx -63.3796$ and $x \approx -3.2871$, so $f' > 0$ left of −63.38, $f' < 0$ between −63.38 and −3.29, and $f' > 0$ right of −3.29. Any interval containing one of these zeros is non-monotone and must be rejected.
+**Умови єдиного кореня на [x₁; x₂]:** ① $f(x_1)\cdot f(x_2) < 0$ (зміна знака) і ② f строго монотонна на відрізку ($f'(x)$ зберігає сталий знак). Для цієї f маємо $f'(x) = 0$ при $x \approx -63.3796$ та $x \approx -3.2871$, тому $f' > 0$ лівіше −63.38, $f' < 0$ між −63.38 і −3.29, і $f' > 0$ правіше −3.29. Будь-який відрізок, що містить один із цих нулів, немонотонний і має бути відхилений.
 
-**Bisection:** compute the midpoint $x_i = (x_1 + x_2)/2$ and keep the half containing the sign change (if $f(x_1)\cdot f(x_i) < 0$ then $x_2 = x_i$, else $x_1 = x_i$). Every iteration halves the bracket: after $k$ iterations the width is $(b-a)/2^k$, so the guaranteed error bound is $|X - x_i| \le (b-a)/2^{k+1}$. Stopping condition: $|x_1 - x_2| \le \varepsilon$ **or** $|f(x_i)| \le \varepsilon$.
+**Бісекція:** обчислюємо середину $x_i = (x_1 + x_2)/2$ і залишаємо ту половину, де є зміна знака (якщо $f(x_1)\cdot f(x_i) < 0$, то $x_2 = x_i$, інакше $x_1 = x_i$). Кожна ітерація вдвічі звужує проміжок: після $k$ ітерацій його ширина дорівнює $(b-a)/2^k$, тому гарантована оцінка похибки — $|X - x_i| \le (b-a)/2^{k+1}$. Умова зупинки: $|x_1 - x_2| \le \varepsilon$ **або** $|f(x_i)| \le \varepsilon$.
 
-**Chord (regula falsi):** $x_i$ is the root of the secant through the current bracket ends:
+**Хорди (regula falsi):** $x_i$ — корінь січної, проведеної через кінці поточного проміжку:
 
 $$x_i = \frac{f(x_2)\,x_1 - f(x_1)\,x_2}{f(x_2) - f(x_1)}$$
 
-The bracket is updated exactly as in bisection (keep the sign change); the endpoint whose side never changes stays fixed. Stopping condition: $|f(x_i)| \le \varepsilon$. For this f (concave down on all working intervals, since $f''(x) = 0.5 + 0.06\,(x+25) < 0$ for $x < -33.3$) the left endpoint $x_1$ stays fixed and the iterates converge monotonically to the root from the right.
+Проміжок оновлюється так само, як у бісекції (залишаємо зміну знака); кінець, з боку якого знак не змінюється, залишається нерухомим. Умова зупинки: $|f(x_i)| \le \varepsilon$. Для цієї f (опукла вниз на всіх робочих відрізках, оскільки $f''(x) = 0.5 + 0.06\,(x+25) < 0$ при $x < -33.3$) лівий кінець $x_1$ залишається нерухомим, а ітерації збігаються до кореня монотонно справа.
 
-## 2. Algorithm schemes
+## 2. Схеми алгоритмів
 
-### 2.1 Chord method
+### 2.1 Метод хорд
 
 ```text
 +--------------------------------------------------------------------+
@@ -68,9 +68,9 @@ The bracket is updated exactly as in bisection (keep the sign change); the endpo
           +---------------------------+           intermediate)
 ```
 
-### 2.2 Bisection method
+### 2.2 Метод бісекції
 
-Same input, validation, update and pause-menu block as above; the iteration block differs:
+Ті самі вхідні дані, перевірка, оновлення та блок меню паузи, що й вище; відрізняється лише блок ітерації:
 
 ```text
    +---------------------------------------------------------------+
@@ -88,59 +88,59 @@ Same input, validation, update and pause-menu block as above; the iteration bloc
                           (then: pause-menu check as in 2.1)
 ```
 
-## 3. Program features
+## 3. Можливості програми
 
-- **Input validation, one pass:** interval must satisfy $x_1 < x_2$ **and** pass the uniqueness check above (rejection reason printed; interval re-entered); `eps` must lie in `[1e-5; 1e-3]`; `max_iter ≥ 1` (batch length); `debug` is 0 or 1.
-- **Batch control menu** (shown after every `max_iter` iterations without convergence): `1` — continue for another `max_iter`; `2` — remove the iteration limit and run to convergence; `3` — abort and print the current intermediate `xi`, `f(xi)`.
-- **Graceful end of input (EOF):** if the input stream ends while the pause menu is open, the program reports `Input stream ended - treating as abort.` and terminates cleanly with the intermediate values (needed for scripted/redirected runs).
-- **Timing:** `clock()` from `<time.h>`; the pause time is excluded; output in ms (<1 s) or s.
-- **Debug mode** prints `iters, xi, f(xi)` at every iteration.
+- **Перевірка вхідних даних за один прохід:** відрізок має задовольняти $x_1 < x_2$ **і** пройти перевірку єдиності вище (причина відхилення друкується; відрізок вводиться повторно); `eps` має лежати в `[1e-5; 1e-3]`; `max_iter ≥ 1` (довжина порції); `debug` дорівнює 0 або 1.
+- **Меню порційного керування** (показується після кожних `max_iter` ітерацій без збіжності): `1` — продовжити ще на `max_iter`; `2` — зняти обмеження на кількість ітерацій і працювати до збіжності; `3` — перервати й надрукувати поточні проміжні `xi`, `f(xi)`.
+- **Коректне завершення вхідного потоку (EOF):** якщо потік вхідних даних закінчується під час відкритого меню паузи, програма повідомляє `Input stream ended - treating as abort.` і коректно завершується з проміжними значеннями (потрібно для сценарних запусків із перенаправленням).
+- **Вимірювання часу:** `clock()` з `<time.h>`; час паузи не враховується; вивід у мс (< 1 с) або с.
+- **Режим відлагодження** друкує `iters, xi, f(xi)` на кожній ітерації.
 
-## 4. Convergence study (real runs)
+## 4. Дослідження збіжності (реальні запуски)
 
-All runs with `eps = 0.00001`, `max_iter = 10`, `debug = 0`, pause-menu answer `2` (unlimited). Iterations counted by the program; time — `clock()`.
+Усі запуски з `eps = 0.00001`, `max_iter = 10`, `debug = 0`, відповідь у меню паузи `2` (без обмежень). Кількість ітерацій рахує програма; час — `clock()`.
 
-| Interval [x₁; x₂] | Width b−a | Method | Root X | Residual f(X) | Iterations | Time |
+| Відрізок [x₁; x₂] | Ширина b−a | Метод | Корінь X | Нев'язка f(X) | Ітерацій | Час |
 | --- | --- | --- | --- | --- | --- | --- |
-| [−110; −85] | 25 | Chord | −96.8676104788 | 4.205609e−06 | 13 | 0 ms |
-| [−110; −85] | 25 | Bisection | −96.8676096201 | 8.493679e−05 | 22 | 0 ms |
-| [−100; −94] | 6 | Chord | −96.8676105145 | 8.490110e−07 | 7 | 0 ms |
-| [−100; −94] | 6 | Bisection | −96.8676118851 | −1.280045e−04 | 20 | 0 ms |
-| [−98; −95] | 3 | Chord | −96.8676105123 | 1.058664e−06 | 5 | 0 ms |
-| [−98; −95] | 3 | Bisection | −96.8676099777 | 5.131448e−05 | 19 | 0 ms |
-| [−97.1; −96.8] | 0.3 | Chord | −96.8676105165 | 6.585024e−07 | 3 | 0 ms |
-| [−97.1; −96.8] | 0.3 | Bisection | −96.8676071167 | 3.202930e−04 | 15 | 0 ms |
+| [−110; −85] | 25 | Хорди | −96.8676104788 | 4.205609e−06 | 13 | 0 мс |
+| [−110; −85] | 25 | Бісекція | −96.8676096201 | 8.493679e−05 | 22 | 0 мс |
+| [−100; −94] | 6 | Хорди | −96.8676105145 | 8.490110e−07 | 7 | 0 мс |
+| [−100; −94] | 6 | Бісекція | −96.8676118851 | −1.280045e−04 | 20 | 0 мс |
+| [−98; −95] | 3 | Хорди | −96.8676105123 | 1.058664e−06 | 5 | 0 мс |
+| [−98; −95] | 3 | Бісекція | −96.8676099777 | 5.131448e−05 | 19 | 0 мс |
+| [−97.1; −96.8] | 0.3 | Хорди | −96.8676105165 | 6.585024e−07 | 3 | 0 мс |
+| [−97.1; −96.8] | 0.3 | Бісекція | −96.8676071167 | 3.202930e−04 | 15 | 0 мс |
 
-All found roots agree with the true root −96.8676105235 to within the requested tolerance (max deviation 3.4·10⁻⁶ ≤ eps). Every method overshoots *fewer* iterations on a narrower starting interval; time is below `clock()`'s 1 ms resolution in all runs (reported as `0 ms`).
+Усі знайдені корені збігаються зі справжнім коренем −96.8676105235 у межах заданого допуску (максимальне відхилення 3.4·10⁻⁶ ≤ eps). На вужчому початковому відрізку кожен метод робить *менше* ітерацій; час у всіх запусках нижчий за роздільну здатність `clock()` 1 мс (виводиться як `0 мс`).
 
-**Bisection iteration count vs theory.** The guaranteed estimate is $k = \lceil \log_2 (b-a)/\varepsilon \rceil$ (width criterion):
+**Кількість ітерацій бісекції проти теорії.** Гарантована оцінка — $k = \lceil \log_2 (b-a)/\varepsilon \rceil$ (критерій ширини):
 
-| Interval | log₂((b−a)/eps) | Theory k | Measured k |
+| Відрізок | log₂((b−a)/eps) | Теорія, k | Виміряно, k |
 | --- | --- | --- | --- |
 | [−110; −85] | 21.25 | 22 | 22 |
 | [−100; −94] | 19.19 | 20 | 20 |
 | [−98; −95] | 18.19 | 19 | 19 |
 | [−97.1; −96.8] | 14.87 | 15 | 15 |
 
-Measured counts match theory **exactly** in all four cases — the residual test never fired first because with $|f'(X_*)| \approx 94$ the residual bound shrinks far slower than the width.
+Виміряні кількості збігаються з теорією **точно** в усіх чотирьох випадках — перевірка нев'язки жодного разу не спрацювала першою, бо при $|f'(X_*)| \approx 94$ оцінка нев'язки зменшується значно повільніше за ширину.
 
-**Chord method observations.** The chord stop is $|f(X)| \le \varepsilon$, so its residual is always ≤ eps (4.2e−06 … 6.6e−07 in the table). Its iteration cost depends on the bracket position: 13 iterations on the wide [−110; −85] (fixed left endpoint at x₁ = −110, far from the root) vs 3 on [−97.1; −96.8]. The debug trace confirms the theory for concave-down f: iterates approach the root monotonically from the right (f(x₁) < 0 endpoint stays fixed), while bisection midpoints alternate in sign.
+**Спостереження для методу хорд.** Зупинка хорд — це $|f(X)| \le \varepsilon$, тому нев'язка завжди ≤ eps (4.2e−06 … 6.6e−07 у таблиці). Ціна ітерацій залежить від положення проміжку: 13 ітерацій на широкому [−110; −85] (нерухомий лівий кінець x₁ = −110, далеко від кореня) проти 3 на [−97.1; −96.8]. Трасування відлагодження підтверджує теорію для опуклої вниз f: ітерації наближаються до кореня монотонно справа (кінець, де f(x₁) < 0, залишається нерухомим), тоді як середини бісекції чергують знак.
 
-## 5. Interval validation: real rejection examples
+## 5. Перевірка відрізка: реальні приклади відхилення
 
-| Interval | f(x₁)·f(x₂) | Sign change? | f' one sign? | Program verdict (verbatim) |
+| Відрізок | f(x₁)·f(x₂) | Зміна знака? | f' одного знака? | Вердикт програми (дослівно) |
 | --- | --- | --- | --- | --- |
-| [−90; −60] | 7.694635e+05 | no | no (f' changes around −62.5) | rejected — both conditions |
-| [−100; −50] | &lt; 0 | yes | no | rejected — only monotonicity |
-| [−60; −10] | 4.666335e+05 | no | yes (decreasing) | rejected — only sign change |
-| [−97.05; −96.9] | 5.244278e+01 | no (root outside!) | yes | rejected — only sign change |
-| [−98; −85] | &lt; 0 | yes | yes | **accepted** → solved, see below |
+| [−90; −60] | 7.694635e+05 | ні | ні (f' змінюється близько −62.5) | відхилено — обидві умови |
+| [−100; −50] | &lt; 0 | так | ні | відхилено — лише монотонність |
+| [−60; −10] | 4.666335e+05 | ні | так (спадна) | відхилено — лише зміна знака |
+| [−97.05; −96.9] | 5.244278e+01 | ні (корінь поза відрізком!) | так | відхилено — лише зміна знака |
+| [−98; −85] | &lt; 0 | так | так | **прийнято** → розв'язано, див. нижче |
 
-For the accepted [−98; −85] the run continued to convergence: chord −96.8676104393, f = 7.921991e−06, 5 iterations; bisection −96.8676097393, f = 7.372935e−05, 21 iterations (theory: ⌈log₂(13/eps)⌉ = 21 ✓). The narrow [−97.05; −96.9] rejection is instructive: both endpoints lie *left* of the root (f(−97.05) = −17.21, f(−96.9) = −3.05), so bisection cannot bracket it — exactly what the sign test catches.
+Для прийнятого [−98; −85] запуск доведено до збіжності: хорди −96.8676104393, f = 7.921991e−06, 5 ітерацій; бісекція −96.8676097393, f = 7.372935e−05, 21 ітерація (теорія: ⌈log₂(13/eps)⌉ = 21 ✓). Повчальне відхилення вузького [−97.05; −96.9]: обидва кінці лежать *лівіше* кореня (f(−97.05) = −17.21, f(−96.9) = −3.05), тому бісекція не може взяти його в проміжок — саме це й ловить перевірка знака.
 
-## 6. Debug mode and batch control (real excerpts)
+## 6. Режим відлагодження та порційне керування (реальні фрагменти)
 
-Debug run `[-98; -95]`, eps = 1e−05, max_iter = 5, debug = 1 (chord converges at iteration 5; bisection pauses at 5, user answers `2`, continues to 19):
+Запуск відлагодження `[-98; -95]`, eps = 1e−05, max_iter = 5, debug = 1 (хорди збігаються на ітерації 5; бісекція робить паузу на 5, користувач відповідає `2`, робота триває до 19):
 
 ```text
 [debug] it 1: x = -96.824265975820, f(x) = 4.071449e+00
@@ -166,9 +166,9 @@ Iterations    : 19
 Elapsed time  : 0 ms
 ```
 
-Chord shrinks its residual roughly ×20 per iteration here (4.07 → 9.2e−02 → 2.1e−03 → 4.7e−05 → 1.1e−06) — visibly faster than bisection's ×0.5-per-iteration shrink of the bracket, which also explains why chord needed only 5 iterations from the same interval.
+Тут хорди зменшують нев'язку приблизно у 20 разів за ітерацію (4.07 → 9.2e−02 → 2.1e−03 → 4.7e−05 → 1.1e−06) — помітно швидше, ніж бісекція, яка щоразу зменшує проміжок удвічі (×0.5), що також пояснює, чому хордам на цьому самому відрізку знадобилося лише 5 ітерацій.
 
-Abort demo `[-110; -85]`, eps = 1e−05, max_iter = 10: chord's menu answered `3` (aborted at iteration 10), then bisection's menu met the end of redirected input and both terminated cleanly with intermediates:
+Демонстрація переривання `[-110; -85]`, eps = 1e−05, max_iter = 10: у меню хорд відповіли `3` (перервано на ітерації 10), потім меню бісекції натрапило на кінець перенаправленого вводу, і обидва методи коректно завершилися з проміжними значеннями:
 
 ```text
 === Chord method ===
@@ -184,24 +184,24 @@ Iterations    : 10
 Aborted by user; X and f(X) above are the current intermediate values.
 ```
 
-## 7. Control questions
+## 7. Контрольні питання
 
-**Q1. What is the root of a nonlinear equation, and when is it unique on an interval?**
-A root (solution) of $f(x)=0$ is a number $X_*$ with $f(X_*)=0$. On $[x_1;x_2]$ the root exists and is unique if $f(x_1)\cdot f(x_2)<0$ and $f$ is strictly monotone there ($f'$ keeps one sign). The program checks both conditions before solving.
+**П1. Що таке корінь нелінійного рівняння і коли він єдиний на відрізку?**
+Корінь (розв'язок) $f(x)=0$ — це число $X_*$, для якого $f(X_*)=0$. На $[x_1;x_2]$ корінь існує й єдиний, якщо $f(x_1)\cdot f(x_2)<0$ і $f$ строго монотонна на цьому відрізку ($f'$ зберігає один знак). Програма перевіряє обидві умови перед розв'язанням.
 
-**Q2. Why must the interval be validated before iterating?**
-Without a sign change the iterations have no bracket to shrink and may diverge or "converge" to a non-root; without monotonicity there may be several roots in the interval and the methods may converge to an unrequested one or oscillate between brackets. Real examples in §5 show both failures caught.
+**П2. Чому відрізок треба перевіряти перед ітераціями?**
+Без зміни знака ітераціям немає що звужувати — вони можуть розійтися або «збігтися» до не-кореня; без монотонності на відрізку може бути кілька коренів, і методи можуть збігтися до незамовленого кореня або коливатися між проміжками. Реальні приклади в §5 показують, як ловляться обидві помилки.
 
-**Q3. Describe the bisection method and its guaranteed accuracy.**
-Compute the midpoint $x_i=(x_1+x_2)/2$; keep the half with the sign change; each iteration halves the bracket. The error after $k$ iterations satisfies $|X_*-x_i|\le (b-a)/2^{k+1}$; convergence is unconditional once the interval is valid.
+**П3. Опишіть метод бісекції та його гарантовану точність.**
+Обчислюємо середину $x_i=(x_1+x_2)/2$; залишаємо половину зі зміною знака; кожна ітерація вдвічі звужує проміжок. Після $k$ ітерацій похибка задовольняє $|X_*-x_i|\le (b-a)/2^{k+1}$; збіжність безумовна, щойно відрізок валідний.
 
-**Q4. How many bisection iterations guarantee accuracy eps?**
-From $(b-a)/2^k \le \varepsilon$: $k \ge \log_2\big((b-a)/\varepsilon\big)$. E.g. for [−110; −85], eps = 1e−5: $\log_2 2.5\cdot 10^6 = 21.25 \Rightarrow k = 22$ — exactly the measured count (see §4 table; 20/19/15 for the other intervals, all matching).
+**П4. Скільки ітерацій бісекції гарантують точність eps?**
+З $(b-a)/2^k \le \varepsilon$: $k \ge \log_2\big((b-a)/\varepsilon\big)$. Наприклад, для [−110; −85], eps = 1e−5: $\log_2 2.5\cdot 10^6 = 21.25 \Rightarrow k = 22$ — саме виміряна кількість (див. таблицю §4; 20/19/15 для інших відрізків, усі збігаються).
 
-**Q5. Describe the chord method: formula, geometry, stopping test.**
-Each iteration replaces the function by the secant (chord) through the current bracket ends and takes its zero: $x_i = \frac{f(x_2)x_1 - f(x_1)x_2}{f(x_2)-f(x_1)}$; the bracket then keeps the half with the sign change. With $f''$ of constant sign one endpoint stays fixed (here the left one, since $f(x_1)<0$ and $f''<0$) and iterates converge monotonically from the other side. Stop when $|f(x_i)| \le \varepsilon$.
+**П5. Опишіть метод хорд: формула, геометрія, умова зупинки.**
+Кожна ітерація замінює функцію січною (хордою) через кінці поточного проміжку і бере її нуль: $x_i = \frac{f(x_2)x_1 - f(x_1)x_2}{f(x_2)-f(x_1)}$; потім проміжок залишає ту половину, де є зміна знака. При сталому знаку $f''$ один кінець залишається нерухомим (тут лівий, оскільки $f(x_1)<0$ і $f''<0$), а ітерації збігаються монотонно з іншого боку. Зупинка — коли $|f(x_i)| \le \varepsilon$.
 
-**Q6. Write a C function computing the minimum of four numbers.**
+**П6. Напишіть функцію C, що обчислює мінімум із чотирьох чисел.**
 
 ```c
 double min4(double a, double b, double c, double d) {
@@ -215,14 +215,14 @@ double min4(double a, double b, double c, double d) {
 }
 ```
 
-(A one-expression alternative: `return fmin(a, fmin(b, fmin(c, d)));` with `<math.h>`. The explicit form above uses no library calls and compares sequentially, matching the style of the rest of the lab.)
+(Альтернатива в один вираз: `return fmin(a, fmin(b, fmin(c, d)));` з `<math.h>`. Явна форма вище не викликає бібліотечних функцій і порівнює послідовно, що відповідає стилю решти лабораторної.)
 
-## 8. Build and run
+## 8. Збірка та запуск
 
 ```bash
 gcc -std=c99 -Wall -Wextra -O2 -o lapka_3/lab3.exe lapka_3/main.c -lm
-./lapka_3                                            # interactive: interval, eps,
-                                                     # max_iter, debug, menu answers
+./lapka_3                                            # інтерактивно: відрізок, eps,
+                                                     # max_iter, debug, відповіді меню
 ```
 
-All report numbers were produced from real runs of this exact binary (`lapka_3/main.c`, gcc 15.1.0 / MSYS2 UCRT64, `-Wall -Wextra` clean).
+Усі числа звіту отримано з реальних запусків саме цього бінарника (`lapka_3/main.c`, gcc 15.1.0 / MSYS2 UCRT64, `-Wall -Wextra` без попереджень).

@@ -4,7 +4,7 @@
 #include <math.h>
 
 /* ==================== ЛАБОРАТОРНА РОБОТА 2 (ВАРІАНТ 10) ====================
-   Чисельне інтегрування f(x) = sin^2(x) на відрізку [a; b]
+   Чисельне інтегрування f(x) = x^2 * sin(x) на відрізку [a; b]
    методами лівих/правих прямокутників, трапецій та Сімпсона. */
 
 /* Тип вказівника на функцію чисельного інтегрування */
@@ -59,7 +59,7 @@ int main(void) {
     for (;;) {
         int option = -1;
 
-        printf("\n=== Numerical integration, Variant 10 (f(x) = sin^2(x)) ===\n");
+        printf("\n=== Numerical integration, Variant 10 (f(x) = x^2 * sin(x)) ===\n");
         printf("Operations:\n");
         printf("  1 - Left rectangles\n");
         printf("  2 - Right rectangles\n");
@@ -89,9 +89,9 @@ int main(void) {
 
 /* ==================== РЕАЛІЗАЦІЯ (ОПИС) ФУНКЦІЙ ==================== */
 
-/* Підінтегральна функція Варіанту 10: f(x) = sin^2(x) */
+/* Підінтегральна функція Варіанту 10: f(x) = x^2 * sin(x) */
 double integrand_expression(double x) {
-    return pow(sin(x), 2.0);
+    return x * x * sin(x);
 }
 
 /* Ліві прямокутники: sum(k = 0..n-1) f(x_k) * h, h = (b - a) / n */

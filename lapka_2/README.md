@@ -1,94 +1,119 @@
-# Лабораторна робота 2 — Numerical Integration (Variant 10)
+# Лабораторна робота 2 — чисельне інтегрування (Варіант 10)
 
-**Task (Variant 10):** compute the integral
+**Завдання (Варіант 10):** обчислити інтеграл
 
-$$I = \int_{-4.5}^{10} \sin^2(x)\,dx$$
+$$I = \int_{-4.5}^{10} x^2 \sin(x)\,dx$$
 
-numerically with the **left rectangles**, **right rectangles**, **trapezoidal** and **Simpson's** rules, refine the step count `N` until the difference between two successive approximations is below `eps`, and compare the methods.
+чисельно методами **лівих прямокутників**, **правих прямокутників**, **трапецій** та **Сімпсона**, збільшуючи кількість кроків `N`, доки різниця між двома послідовними наближеннями не стане меншою за `eps`, і порівняти методи.
 
-Source: [`lapka_2/main.c`](main.c). Program: menu-driven (options `1`–`4` per method, `5` summary table for all methods, `0` exit), inputs `a`, `b`, `n` (n > 0), `eps` (`0.00001 ≤ eps ≤ 0.001`). All numbers below are **real program output** (compiled with `gcc -std=c99 -Wall -Wextra -O2`, zero warnings).
+Джерело: [`lapka_2/main.c`](main.c). Програма має меню (пункти `1`–`4` — окремі методи, `5` — зведена таблиця для всіх методів, `0` — вихід), вхідні дані: `a`, `b`, `n` (n > 0), `eps` (`0.00001 ≤ eps ≤ 0.001`). Усі наведені нижче числа — **реальний вивід програми** (зібрано `gcc -std=c99 -Wall -Wextra -O2`, без попереджень).
 
-## 1. Analytical evaluation
+## 1. Аналітичне обчислення
 
-Using the trigonometric identity $\sin^2 x = \frac{1-\cos 2x}{2}$:
+Інтеграл береться двічі частинами. Нехай
 
-$$\int \sin^2 x \, dx = \int \frac{1-\cos 2x}{2}\,dx = \frac{x}{2} - \frac{\sin 2x}{4} + C$$
+$$u = x^2, \quad dv = \sin x\,dx \;\Rightarrow\; du = 2x\,dx, \quad v = -\cos x.$$
 
-Therefore
+Тоді
 
-$$\int_{-4.5}^{10}\sin^2 x\,dx = \left[\frac{x}{2}-\frac{\sin 2x}{4}\right]_{-4.5}^{10} = \left(5-\frac{\sin 20}{4}\right)-\left(-2.25+\frac{\sin 9}{4}\right)$$
+$$\int x^2 \sin x\,dx = -x^2\cos x + \int 2x\cos x\,dx.$$
 
-With $\sin 20 = 0.91294525$, $\sin 9 = 0.41211849$ (radians):
+Для другого інтеграла знову застосовуємо інтегрування частинами ($u = 2x$, $dv = \cos x\,dx$; $du = 2\,dx$, $v = \sin x$):
 
-$$I = (5 - 0.22823631) - (-2.14697038) = 6.91873407$$
+$$\int 2x\cos x\,dx = 2x\sin x - \int 2\sin x\,dx = 2x\sin x + 2\cos x.$$
 
-**Exact reference value: I = 6.91873407** (8 decimal places).
+Отже,
 
-## 2. Results summary table (real program output)
+$$\int x^2 \sin x\,dx = -x^2\cos x + 2x\sin x + 2\cos x + C.$$
 
-Program input for every run: `a = -4.5`, `b = 10`, `eps = 0.0001`, menu option `5`. Each block below is one run with a different initial `n`; columns exactly as printed by the program.
+Первісна $F(x) = -x^2\cos x + 2x\sin x + 2\cos x$, тому
 
-### Initial n = 10
+$$I = \left[-x^2\cos x + 2x\sin x + 2\cos x\right]_{-4.5}^{10} = F(10) - F(-4.5).$$
 
-| Method            |        I(n) |       N |        I(N) |     Delta |
-| ----------------- | ----------- | ------- | ----------- | --------- |
-| Left rectangles   |     7.669908 |     316 |     6.934100 | 9.936e-05 |
-| Right rectangles  |     6.713479 |     306 |     6.903354 | 9.954e-05 |
-| Trapezoidal       |     7.191693 |     100 |     6.921059 | 9.600e-05 |
-| Simpson's rule    |     5.872677 |      42 |     6.918291 | 9.883e-05 |
+Обчислення значень (радіани):
 
-### Initial n = 100
+$$F(10) = -100\cos 10 + 20\sin 10 + 2\cos 10 = 71.3485876317,$$
 
-| Method            |        I(n) |       N |        I(N) |     Delta |
-| ----------------- | ----------- | ------- | ----------- | --------- |
-| Left rectangles   |     6.968880 |     316 |     6.934100 | 9.936e-05 |
-| Right rectangles  |     6.873238 |     306 |     6.903354 | 9.954e-05 |
-| Trapezoidal       |     6.921059 |     102 |     6.920969 | 9.040e-05 |
-| Simpson's rule    |     6.918721 |     102 |     6.918722 | 1.006e-06 |
+$$F(-4.5) = -20.25\cos(-4.5) + 2(-4.5)\sin(-4.5) + 2\cos(-4.5) = -4.9507477194.$$
 
-### Initial n = 1000
+Тому
 
-| Method            |        I(n) |       N |        I(N) |     Delta |
-| ----------------- | ----------- | ------- | ----------- | --------- |
-| Left rectangles   |     6.923539 |    1002 |     6.923530 | 9.638e-06 |
-| Right rectangles  |     6.913975 |    1002 |     6.913985 | 9.453e-06 |
-| Trapezoidal       |     6.918757 |    1002 |     6.918757 | 9.259e-08 |
-| Simpson's rule    |     6.918734 |    1002 |     6.918734 | 1.036e-11 |
+$$I = 71.3485876317 - (-4.9507477194) = 76.2993353511.$$
 
-### Initial n = 10000
+**Точне (еталонне) значення: I = 76.29933535** (8 знаків після коми).
 
-| Method            |        I(n) |       N |        I(N) |     Delta |
-| ----------------- | ----------- | ------- | ----------- | --------- |
-| Left rectangles   |     6.919213 |   10002 |     6.919212 | 9.572e-08 |
-| Right rectangles  |     6.918256 |   10002 |     6.918256 | 9.553e-08 |
-| Trapezoidal       |     6.918734 |   10002 |     6.918734 | 9.278e-11 |
-| Simpson's rule    |     6.918734 |   10002 |     6.918734 | 2.398e-14 |
+## 2. Зведена таблиця результатів (реальний вивід програми)
 
-## 3. Trapezoidal method: data points (n, I)
+Вхідні дані для всіх запусків: `a = -4.5`, `b = 10`, `eps = 0.0001`, пункт меню `5`. Кожен блок нижче — окремий запуск з різним початковим `n`; назви стовпців точно такі, як їх друкує програма.
 
-Real output of option `3` (Trapezoidal) for `a = -4.5`, `b = 10`, `n = 5, 10, …, 50` — ready for plotting:
+### Початкове n = 10
+
+| Метод              |        I(n) |       N |        I(N) |     Delta |
+| ------------------ | ----------- | ------- | ----------- | --------- |
+| Ліві прямокутники  |   115.244875 |    3280 |    76.463205 | 9.990e-05 |
+| Праві прямокутники |     7.659086 |    3284 |    76.135400 | 9.998e-05 |
+| Трапеції           |    61.451980 |     388 |    76.289824 | 9.882e-05 |
+| Сімпсон            |    78.901922 |      72 |    76.300089 | 9.014e-05 |
+
+### Початкове n = 100
+
+| Метод              |        I(n) |       N |        I(N) |     Delta |
+| ------------------ | ----------- | ------- | ----------- | --------- |
+| Ліві прямокутники  |    81.535392 |    3280 |    76.463205 | 9.990e-05 |
+| Праві прямокутники |    70.776813 |    3284 |    76.135400 | 9.998e-05 |
+| Трапеції           |    76.156103 |     388 |    76.289824 | 9.882e-05 |
+| Сімпсон            |    76.299537 |     102 |    76.299522 | 1.541e-05 |
+
+### Початкове n = 1000
+
+| Метод              |        I(n) |       N |        I(N) |     Delta |
+| ------------------ | ----------- | ------- | ----------- | --------- |
+| Ліві прямокутники  |    76.835832 |    3280 |    76.463205 | 9.990e-05 |
+| Праві прямокутники |    75.759975 |    3284 |    76.135400 | 9.998e-05 |
+| Трапеції           |    76.297904 |    1002 |    76.297909 | 5.710e-06 |
+| Сімпсон            |    76.299335 |    1002 |    76.299335 | 1.606e-10 |
+
+### Початкове n = 10000
+
+| Метод              |        I(n) |       N |        I(N) |     Delta |
+| ------------------ | ----------- | ------- | ----------- | --------- |
+| Ліві прямокутники  |    76.353114 |   10002 |    76.353103 | 1.075e-05 |
+| Праві прямокутники |    76.245528 |   10002 |    76.245539 | 1.076e-05 |
+| Трапеції           |    76.299321 |   10002 |    76.299321 | 5.725e-09 |
+| Сімпсон            |    76.299335 |   10002 |    76.299335 | 7.248e-13 |
+
+## 3. Метод трапецій: дані для графіка (n, I)
+
+Реальний вивід пункту `3` (трапеції) для `a = -4.5`, `b = 10`, `n = 5, 10, …, 50` — готовий для побудови графіка:
 
 | n  | I(n)      |
 | -- | --------- |
-| 5  | 11.148743 |
-| 10 | 7.191693  |
-| 15 | 7.028976  |
-| 20 | 6.978916  |
-| 25 | 6.956741  |
-| 30 | 6.944941  |
-| 35 | 6.937907  |
-| 40 | 6.933373  |
-| 45 | 6.930279  |
-| 50 | 6.928073  |
+| 5  | 9.102156  |
+| 10 | 61.451980 |
+| 15 | 69.833954 |
+| 20 | 72.687890 |
+| 25 | 73.995413 |
+| 30 | 74.702163 |
+| 35 | 75.127127 |
+| 40 | 75.402471 |
+| 45 | 75.591030 |
+| 50 | 75.725798 |
 
-Reference (exact) value: **6.91873407**.
+Еталонне (точне) значення: **76.29933535**.
 
-## 4. Conclusions
+## 4. Висновки
 
-**Convergence speed (N for the prescribed Delta ≤ eps stopping rule, real runs):** Simpson's rule reaches the tolerance with by far the fewest refinements (N = 42 from n = 10), the trapezoidal rule is second (N = 100), the left/right rectangle rules are slowest and need comparable counts (N = 316 / 306). Since the rule refines `N += 2` at a time (per methodology), the rectangle methods dominate the runtime: each refinement recomputes the whole sum from scratch, so overall work grows quadratically with the final N.
+**Швидкість збіжності (N за заданим критерієм зупинки Delta ≤ eps, реальні запуски):** найшвидше допуск досягає метод Сімпсона — йому потрібно найменше уточнень (N = 72 уже з n = 10), другий — метод трапецій (N = 388), найповільніші — методи лівих/правих прямокутників, яким потрібна приблизно однакова кількість кроків (N = 3280 / 3284). Оскільки правило уточнює `N += 2` за раз (за методикою), методи прямокутників домінують за часом роботи: кожне уточнення перераховує всю суму з нуля, тому загальний обсяг роботи зростає квадратично з фінальним N.
 
-**Accuracy order (observed vs theoretical):** with the same interval, the successive difference `Delta` behaves exactly as theory predicts for a composite rule — halving `h` scales `Delta` by ≈2 for the rectangle rules (9.6e-05 → 4.8e-06 per ×10 increase of N: 9.6e-05 @N=100 → 9.6e-06 @N=1000 → 9.6e-08 @N=10000, i.e. `~1/N`), by ≈N² for the trapezoidal rule (9.6e-05 → 9.3e-08 → 9.3e-11, i.e. `~1/N²`), and by ≈N⁴ for Simpson (modeled `~1/N⁴`, e.g. 1.0e-06 @N=102 → 1.0e-11 @N=1002 → 2.4e-14 @N=10002). So the accuracy orders are: rectangles O(h), trapezoidal O(h²), Simpson O(h⁴).
+**Порядок точності (спостережений проти теоретичного):** на тому самому відрізку справжня похибка поводиться саме так, як передбачає теорія для складених квадратур. За даними прогонів при n = 100, 1000, 10000:
 
-**Measured caveat (honest note):** the stopping criterion |I(N) − I(N+2)| ≤ eps *underestimates* the remaining true error, because two successive composite sums share the same leading error term. For example, the left-rectangle run stops at N = 316 with I(N) = 6.934100 — the true error against the exact 6.91873407 is still ≈ 1.5e-02. Measured minimal N for the *true* absolute error < 1e-4 (independent check): left ≈ 47827, right ≈ 47817, trapezoidal ≈ 482, Simpson ≈ 62 (first crossing). This is a property of the prescribed refinement criterion, not of the formulas: the columns I(N) at N = 10000 above show every method matching the exact value to 6 decimals.
+- ліві прямокутники: 5.236 → 0.5365 → 0.05378, тобто `~1/N` (кожне збільшення N у 10 разів зменшує похибку приблизно в 10 разів);
+- праві прямокутники: 5.523 → 0.5394 → 0.05381, тобто `~1/N`;
+- трапеції: 0.1432 → 1.432·10⁻³ → 1.432·10⁻⁵, тобто `~1/N²`;
+- Сімпсон: 2.02·10⁻⁴ → 1.99·10⁻⁸ → ~10⁻¹⁰, тобто `~1/N⁴`.
 
-**Simpson parity:** for odd `n` the method increments `n` by 1 and prints a warning (required behavior); e.g. n = 11 → 12 with `Warning: Simpson's rule needs an even n; n = 11 incremented to 12.`
+Отже порядки точності: прямокутники O(h), трапеції O(h²), Сімпсон O(h⁴).
+
+**Чесне зауваження щодо критерію зупинки:** умова |I(N) − I(N+2)| ≤ eps *занижує* залишкову справжню похибку, бо дві сусідні складені суми мають однаковий головний член похибки. Наприклад, для лівих прямокутників програма зупиняється на N = 3280 з I(N) = 76.463205 — справжня похибка відносно точного 76.29933535 усе ще становить ≈ 0.164. Виміряне мінімальне N для *справжньої* абсолютної похибки < 10⁻⁴ (незалежна перевірка): ліві прямокутники ≈ 5 379 287, праві ≈ 5 379 293, трапеції ≈ 3784, Сімпсон ≈ 120 (перше перетинання порогу). Це властивість заданого критерію уточнення, а не самих формул: у стовпцях I(N) при N = 10000 усі методи збігаються з точним значенням до 6 знаків після коми.
+
+**Парність для Сімпсона:** для непарного `n` метод збільшує `n` на 1 і друкує попередження (потрібна поведінка); наприклад, n = 11 → 12 з повідомленням `Warning: Simpson's rule needs an even n; n = 11 incremented to 12.`
